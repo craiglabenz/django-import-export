@@ -422,8 +422,10 @@ class ModelDeclarativeMetaclass(DeclarativeMetaclass):
 
                 FieldWidget = new_class.widget_from_django_field(f)
                 widget_kwargs = new_class.widget_kwargs_for_field(f.name)
+                model_field = opts.model._meta.get_field_by_name(f.name)[0]
                 field = Field(attribute=f.name, column_name=f.name,
-                        widget=FieldWidget(**widget_kwargs))
+                        widget=FieldWidget(**widget_kwargs),
+                        is_primary_key=model_field.primary_key)
                 field_list.append((f.name, field, ))
 
             new_class.fields.update(SortedDict(field_list))
